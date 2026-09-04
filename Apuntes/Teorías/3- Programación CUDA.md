@@ -18,16 +18,13 @@ __global__ void miFuncion( parámetros ) {
 - La invocación a un kernel es asíncrona.
 - De esta forma, mientras la función del kernel se ejecuta, se puede continuar la ejecución en la CPU o en otras GPUs.
 - Para que el proceso que llama al kernel se demore luego de la invocación es necesario hacer lo siguiente:
-```
+```c
 …
 …
 dim3 bloque(N,N); //Bloque bidimensional de N*N hilos
-dim3 bloque(N,N); //Bloque bidimensional de N*N hilos
-dim3 grid(M,M); //Grid bidimensional de M*M bloques
 dim3 grid(M,M); //Grid bidimensional de M*M bloques
 miFuncion<<<grid, bloque>>>(parámetros);
-miFuncion<<<grid, bloque>>>(parámetros);
-cudaDeviceSynchronize();
 cudaDeviceSynchronize();
 …
 ```
+## Modularidad
