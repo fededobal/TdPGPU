@@ -85,3 +85,14 @@ cudaDeviceSynchronize();
     - WMMA API
     - CuTlas
 # Métricas
+Supongamos un programa al cual se le hizo alguna mejora. Si queremos conocer cuál fue el beneficio alcanzado podemos calcular el **Speedup**:
+
+$Speedup=t_"antes" tdespueˊsSpeedup = \dfrac{t_{antes}}{t_{después}}Speedup=tdespueˊs​tantes$​​
+- tantest_{antes} tantes​: tiempo de ejecución antes de la mejora.
+- tdespueˊst_{después} tdespueˊs​: tiempo de ejecución después de la mejora.
+
+El **Speedup** es una medida de rendimiento relativa que indica cuánto mejora (o empeora) un algoritmo ejecutado sobre distintas arquitecturas.
+
+Podemos utilizarlo para medir cuánto mejora un algoritmo en la GPU respecto a ejecutarlo en una CPU (secuencialmente o en otra arquitectura paralela):
+
+Speedup=tCPUtGPUSpeedup = \dfrac{t_{CPU}}{t_{GPU}}Speedup=tGPU​tCPU​​
