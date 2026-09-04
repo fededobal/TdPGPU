@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "515703544505433d",
+        "id": "e8b830d7181cde28",
         "type": "tabs",
         "children": [
           {
-            "id": "7711953d90f90217",
+            "id": "a5fe87b8806e44f8",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -162,13 +162,23 @@
               "icon": "lucide-list",
               "title": "Esquema"
             }
+          },
+          {
+            "id": "627a5a52606388ba",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
           }
-        ]
+        ],
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -178,9 +188,10 @@
       "daily-notes:Abrir la nota de hoy": false,
       "templates:Insertar plantilla": false,
       "command-palette:Abrir paleta de comandos": false,
-      "bases:Crear nueva base": false
+      "bases:Crear nueva base": false,
+      "obsidian-git:Open Git source control": false
     }
   },
-  "active": "7e9f9901300c2b3a",
+  "active": "a5fe87b8806e44f8",
   "lastOpenFiles": []
 }
