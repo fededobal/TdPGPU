@@ -20,7 +20,6 @@ __global__ void miFuncion( parámetros ) {
 - Para que el proceso que llama al kernel se demore luego de la invocación es necesario hacer lo siguiente:
 ```c
 …
-…
 dim3 bloque(N,N); //Bloque bidimensional de N*N hilos
 dim3 grid(M,M); //Grid bidimensional de M*M bloques
 miFuncion<<<grid, bloque>>>(parámetros);
