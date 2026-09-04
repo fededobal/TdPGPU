@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Apuntes/Explicaciones prácticas/Sin título.md",
+                "file": "Apuntes/Explicaciones prácticas/Reducción de vectores.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Sin título"
+              "title": "Reducción de vectores"
             }
           }
         ],
@@ -215,7 +215,7 @@
   "active": "e2e0cc66e2936f18",
   "lastOpenFiles": [
     "Apuntes/Teorías/3- Programación CUDA.md",
-    "Apuntes/Explicaciones prácticas/Sin título.md",
+    "Apuntes/Explicaciones prácticas/Reducción de vectores.md",
     "Apuntes/Explicaciones prácticas",
     "Apuntes/Imagenes/Pasted image 20260904092220.png",
     "Apuntes/Imagenes/Pasted image 20260904091923.png",
