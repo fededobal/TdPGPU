@@ -53,7 +53,10 @@ cudaDeviceSynchronize();
 - El estado de los warps se lleva en una tabla en hardware llamada scoreboarding (una por warp scheduling) que permite decidir que warp será el próximo en ejecutar.
 ![[Pasted image 20260904090948.png]]
 
+![[Pasted image 20260904091310.png]]
 ## Fermi
 ![[Pasted image 20260904090728.png]]
 ## Volta
 ![[Pasted image 20260904090749.png]]
+# Manejo de errores
+- La mayoría de las funciones CUDA devuelven un código de error del tipo cudaError_t. Sino, devuelve 
