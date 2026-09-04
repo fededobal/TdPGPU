@@ -10,4 +10,9 @@
 	![[Pasted image 20260904093622.png]]
 - Para la siguiente iteración se invoca nuevamente al kernel con la mitad de hilos de la iteración anterior y se sigue con la misma estrategia.
 - En la última iteración se invoca al kernel con un sólo hilo, el resultado final queda en la primer posición del vector.
-- 
+# Alternativa
+Una alternativa, que mejora el acceso a memoria, es utilizar un patrón de acceso a posiciones contiguas.
+![[Pasted image 20260904093802.png]]
+![[Pasted image 20260904093813.png]]
+# CUDA
+![[Pasted image 20260904093839.png]]
