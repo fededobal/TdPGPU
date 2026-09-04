@@ -11,10 +11,14 @@
             "id": "a5fe87b8806e44f8",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Apuntes/Teorías/3- Programación CUDA.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "Nueva pestaña"
+              "title": "3- Programación CUDA"
             }
           }
         ]
@@ -193,6 +197,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "7e9f9901300c2b3a",
-  "lastOpenFiles": []
+  "active": "a5fe87b8806e44f8",
+  "lastOpenFiles": [
+    "Apuntes/Teorías/1- Introducción a HPC y GPGPU.md",
+    "Apuntes/Teorías/2- Arquitecturas GPU.md",
+    "Apuntes/Teorías/3- Programación CUDA.md"
+  ]
 }
