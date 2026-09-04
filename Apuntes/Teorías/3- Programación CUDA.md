@@ -48,4 +48,12 @@ cudaDeviceSynchronize();
 ![[Pasted image 20260904090508.png]]
 ![[Pasted image 20260904090556.png]]
 ![[Pasted image 20260904090616.png]]
-# Planificacio
+# Planificación
+- Las GPUs no soportan afinidad, osea que el programador sólo define la organización de los hilos pero no puede decidir sobre la planificación.
+- El estado de los warps se lleva en una tabla en hardware llamada scoreboarding (una por warp scheduling) que permite decidir que warp será el próximo en ejecutar.
+![[Pasted image 20260904090948.png]]
+
+## Fermi
+![[Pasted image 20260904090728.png]]
+## Volta
+![[Pasted image 20260904090749.png]]
