@@ -66,3 +66,22 @@ cudaDeviceSynchronize();
 	![[Pasted image 20260904091906.png]]
 	- Mediante la función función cudaGetLastError:
 	![[Pasted image 20260904091923.png]]
+# Limitaciones
+- No puede hacerse Entrada-Salida a disco desde la GPU.
+- Dificultad para utilizar bibliotecas de CPU en GPU: deben modificarse las funciones para indicar qué código se ejecuta en CPU (`__host__`) y qué en GPU (`__device__`).
+- No pueden hacerse llamadas recursivas dentro de la GPU.
+- No pueden declararse variables estáticas.
+- El kernel no puede recibir un número variable de argumentos.
+- No se permite afinidad.
+- Una función que se utiliza en el host y en el device pero define variables en un sólo contexto (host o device), debe ser duplicada con una variable para cada contexto.
+# Tensor Cores
+- Los **tensor cores** son unidades **específicas** para acelerar el cálculo de multiplicación y sumas de matrices.
+- Cada tensor core provee de una matriz de procesamiento de _4x4x4_ (o más según la arquitectura) que realiza la operación de matrices `D = AB + C`.
+![[Pasted image 20260904092220.png]]
+- Múltiples tensor cores se ejecutan simultáneamente proporcionando gran capacidad de cómputo.
+- Se pueden utilizar directamente mediante instrucciones PTX/SASS para Tensor Cores, pero son difíciles de programar y requieren conocer la arquitectura. Por eso, es conveniente usar Tensor Cores a partir de bibliotecas:
+    - Deep Learning Frameworks (DL Frameworks: TensorFlow, PyTorch, MXNet)
+    - CuBlas (HGEMM, GEMMEX)
+    - WMMA API
+    - CuTlas
+# Métricas
