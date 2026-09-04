@@ -30,4 +30,18 @@ cudaDeviceSynchronize();
 ## Modularidad
 ![[Pasted image 20260904085859.png]]
 ## Variables built-in
-á
+- Identificar hilos de bloque
+	- threadidx.x
+	- threadidx.y
+	- threadidx.z
+- Identificar bloques de grid
+	- blockIdx.x
+	- blockIdx.y
+- Identificar dimensiones de un bloque
+	- blockDim.x
+	- blockDim.y
+	- blockDim.z
+- Identificar dimensiones de un grid
+	- gridDim.x
+	- gridDim.y
+##
