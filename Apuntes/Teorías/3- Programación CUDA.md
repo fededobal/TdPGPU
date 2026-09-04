@@ -59,4 +59,5 @@ cudaDeviceSynchronize();
 ## Volta
 ![[Pasted image 20260904090749.png]]
 # Manejo de errores
-- La mayoría de las funciones CUDA devuelven un código de error del tipo cudaError_t. Sino, devuelve 
+- La mayoría de las funciones CUDA devuelven un código de error del tipo cudaError_t. Sino, devuelve cudaSuccess si tuvo éxito.
+- 
