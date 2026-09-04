@@ -29,3 +29,5 @@ cudaDeviceSynchronize();
 ```
 ## Modularidad
 ![[Pasted image 20260904085859.png]]
+## Variables built-in
+á
