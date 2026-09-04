@@ -3,7 +3,7 @@ Cuando ejecute un programa en CUDA, lo voy a parametrizar con los parámetros de
 ```
 ./miPrograma N threadsPerBlock
 ```
-## Kernel
+# Kernel
 
 > [!NOTE] Title
 > Se denomina **kernel** a la función que ejecutarán todos los hilos del grid.
@@ -27,9 +27,9 @@ miFuncion<<<grid, bloque>>>(parámetros);
 cudaDeviceSynchronize();
 …
 ```
-## Modularidad
+# Modularidad
 ![[Pasted image 20260904085859.png]]
-## Variables built-in
+# Variables built-in
 - Identificar hilos de bloque
 	- threadidx.x
 	- threadidx.y
@@ -44,4 +44,8 @@ cudaDeviceSynchronize();
 - Identificar dimensiones de un grid
 	- gridDim.x
 	- gridDim.y
-##
+
+![[Pasted image 20260904090508.png]]
+![[Pasted image 20260904090556.png]]
+![[Pasted image 20260904090616.png]]
+# Planificacio
