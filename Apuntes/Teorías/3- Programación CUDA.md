@@ -5,7 +5,7 @@ Cuando ejecute un programa en CUDA, lo voy a parametrizar con los parámetros de
 ```
 # Kernel
 
-> [!NOTE] Title
+> [!NOTE] Definición
 > Se denomina **kernel** a la función que ejecutarán todos los hilos del grid.
 
 ```c

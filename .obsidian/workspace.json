@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Apuntes/Teorías/3- Programación CUDA.md",
+                "file": "Apuntes/Explicaciones prácticas/Reducción de vectores.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "3- Programación CUDA"
+              "title": "Reducción de vectores"
             }
           }
         ],
@@ -214,6 +214,8 @@
   },
   "active": "72b542ea8d9b9736",
   "lastOpenFiles": [
+    "Apuntes/Explicaciones prácticas/Multiplicación de matrices.md",
+    "Apuntes/Teorías/3- Programación CUDA.md",
     "Prácticas/TP1.cu.sb-c74de88f-s6OsOu",
     "Prácticas/TP1.cu",
     "Prácticas/TP1",
@@ -221,7 +223,6 @@
     "Prácticas",
     "carpeta sin título",
     "Apuntes/Explicaciones prácticas/Reducción de vectores.md",
-    "Apuntes/Explicaciones prácticas/Multiplicación de matrices.md",
     "Apuntes/Explicaciones prácticas/Multiplicación de matrices",
     "Apuntes/Imagenes/Pasted image 20260904093839.png",
     "Apuntes/Imagenes/Pasted image 20260904093813.png",
@@ -230,7 +231,6 @@
     "Apuntes/Imagenes/Pasted image 20260904093558.png",
     "Apuntes/Imagenes/Pasted image 20260904093431.png",
     "Apuntes/Imagenes/Pasted image 20260904093340.png",
-    "Apuntes/Teorías/3- Programación CUDA.md",
     "Apuntes/Explicaciones prácticas",
     "Apuntes/Imagenes/Pasted image 20260904092220.png",
     "Apuntes/Imagenes/Pasted image 20260904091923.png",
