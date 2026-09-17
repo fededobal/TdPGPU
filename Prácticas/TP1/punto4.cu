@@ -1,13 +1,19 @@
-%%writefile punto2.cu
+%%writefile punto4.cu
 #include <cuda.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/time.h>
+#include <time.h>
 
-__global__ void punto2(int *d_C, int *d_A, int *d_B, int d_N) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if(idx < d_N) {
-        d_C[idx] = d_A[idx] + d_B[idx];
+__global__ void punto4(int *d_C, int *d_A, int *d_B, int d_N) {
+    int i = blockIdx.y * blockDim.y + threadIdx.y;
+    int j = blockIdx.x * blockDim.x + threadIdx.x;
+    if (i < d_N && j < d_N) {
+        int suma = 0;
+        for(int k = 0; k < d_N; k++) {
+            suma += d_A[i * d_N + k] * d_B[k * d_N + j];
+        }
+        d_C[i * d_N + j] = suma;
     }
 }
 
@@ -23,17 +29,21 @@ double dwalltime(){
 int main(int argc, char** argv) {
     int h_N = 10;
 
-    int threadsXBloque = 256;
-    int bloques = (h_N + threadsXBloque - 1) / threadsXBloque;
+    dim3 bloque(16, 16);
+    dim3 grid((h_N + bloque.x - 1) / bloque.x, (h_N + bloque.y - 1) / bloque.y);
 
-    size_t bytes = h_N * sizeof(int);
+    size_t bytes = h_N * h_N * sizeof(int);
     int *h_C = (int *) malloc(bytes);
     int *h_A = (int *) malloc(bytes);
     int *h_B = (int *) malloc(bytes);
+
+    srand(time(NULL));
     for (int i = 0; i < h_N; i++) {
-        h_C[i] = 0;
-        h_A[i] = i;
-        h_B[i] = i;
+        for(int j = 0; j < h_N; j++) {
+            h_C[i * h_N + j] = 0;
+            h_A[i * h_N + j] = rand() % 10000;
+            h_B[i * h_N + j] = rand() % 10000;
+        }
     }
 
     int *d_C = NULL;
@@ -48,7 +58,7 @@ int main(int argc, char** argv) {
     cudaMemcpy(d_B, h_B, bytes, cudaMemcpyHostToDevice);
 
     double ini = dwalltime();
-    punto2<<<bloques, threadsXBloque>>>(d_C, d_A, d_B, h_N);
+    punto4<<<grid, bloque>>>(d_C, d_A, d_B, h_N);
     cudaDeviceSynchronize();
     double fin = dwalltime();
 
@@ -58,10 +68,12 @@ int main(int argc, char** argv) {
 
     printf("%f\n", fin - ini);
     for (int i = 0; i < h_N; i++) {
-        printf("C: %d\n", h_C[i]);
-        printf("A: %d\n", h_A[i]);
-        printf("B: %d\n", h_B[i]);
-        printf("\n");
+        for(int j = 0; j < h_N; j++) {        
+            printf("C: %d\n", h_C[i * h_N + j]);
+            printf("A: %d\n", h_A[i * h_N + j]);
+            printf("B: %d\n", h_B[i * h_N + j]);
+            printf("\n");
+        }
     }
 
     free(h_A);
