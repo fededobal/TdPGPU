@@ -1,5 +1,6 @@
-%%writefile punto1b.cu
 #include <cuda.h>
+#include <cuda_runtime_api.h>
+#include <device_launch_parameters.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/time.h>

@@ -1,4 +1,3 @@
-%%writefile punto4.cu
 #include <cuda.h>
 #include <stdlib.h>
 #include <stdio.h>
