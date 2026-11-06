@@ -27,7 +27,7 @@ cudaDeviceSynchronize();
 …
 ```
 # Modularidad
-![[Pasted image 20260904085859.png]]
+![](../Imagenes/Pasted%20image%2020260904085859.png)
 # Variables built-in
 - Identificar hilos de bloque
 	- threadidx.x
@@ -44,27 +44,27 @@ cudaDeviceSynchronize();
 	- gridDim.x
 	- gridDim.y
 
-![[Pasted image 20260904090508.png]]
-![[Pasted image 20260904090556.png]]
-![[Pasted image 20260904090616.png]]
+![](../Imagenes/Pasted%20image%2020260904090508.png)
+![](../Imagenes/Pasted%20image%2020260904090556.png)
+![](../Imagenes/Pasted%20image%2020260904090616.png)
 # Planificación
 - Las GPUs no soportan afinidad, osea que el programador sólo define la organización de los hilos pero no puede decidir sobre la planificación.
 - El estado de los warps se lleva en una tabla en hardware llamada scoreboarding (una por warp scheduling) que permite decidir que warp será el próximo en ejecutar.
-![[Pasted image 20260904090948.png]]
+![](../Imagenes/Pasted%20image%2020260904090948.png)
 
-![[Pasted image 20260904091310.png]]
+![](../Imagenes/Pasted%20image%2020260904091310.png)
 ## Fermi
-![[Pasted image 20260904090728.png]]
+![](../Imagenes/Pasted%20image%2020260904090728.png)
 ## Volta
-![[Pasted image 20260904090749.png]]
+![](../Imagenes/Pasted%20image%2020260904090749.png)
 # Manejo de errores
 - La mayoría de las funciones CUDA devuelven un código de error del tipo cudaError_t. Sino, devuelve cudaSuccess si tuvo éxito.
 - Igualmente, un llamado al kernel no tiene valor de retorno.
 - Para saber si salió con éxito:
 	- Mediante la función cudaDeviceSynchronize:
-	![[Pasted image 20260904091906.png]]
+	![](../Imagenes/Pasted%20image%2020260904091906.png)
 	- Mediante la función función cudaGetLastError:
-	![[Pasted image 20260904091923.png]]
+	![](../Imagenes/Pasted%20image%2020260904091923.png)
 # Limitaciones
 - No puede hacerse Entrada-Salida a disco desde la GPU.
 - Dificultad para utilizar bibliotecas de CPU en GPU: deben modificarse las funciones para indicar qué código se ejecuta en CPU (`__host__`) y qué en GPU (`__device__`).
@@ -76,7 +76,7 @@ cudaDeviceSynchronize();
 # Tensor Cores
 - Los **tensor cores** son unidades **específicas** para acelerar el cálculo de multiplicación y sumas de matrices.
 - Cada tensor core provee de una matriz de procesamiento de _4x4x4_ (o más según la arquitectura) que realiza la operación de matrices `D = AB + C`.
-![[Pasted image 20260904092220.png]]
+![](../Imagenes/Pasted%20image%2020260904092220.png)
 - Múltiples tensor cores se ejecutan simultáneamente proporcionando gran capacidad de cómputo.
 - Se pueden utilizar directamente mediante instrucciones PTX/SASS para Tensor Cores, pero son difíciles de programar y requieren conocer la arquitectura. Por eso, es conveniente usar Tensor Cores a partir de bibliotecas:
     - Deep Learning Frameworks (DL Frameworks: TensorFlow, PyTorch, MXNet)

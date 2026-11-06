@@ -31,50 +31,50 @@ Basada en dos aspectos:
 - Single Instruction Single Data: Un único flujo de instrucciones y un único flujo de datos.
 	- Arquitectura correspondiente al modelo secuencial tradicional.
 	- Ejemplo: Monoprocesadores (la mayoría de las PCs del siglo XX)
-![[Pasted image 20260821085851.png]]
+![](../Imagenes/Pasted%20image%2020260821085851.png)
 
 - Single Instruction Multiple Data: Un único flujo de instrucciones y múltiples flujos de datos.
 	- Arquitectura donde la misma operación se ejecuta en paralelo sobre diferentes datos.
 	- Ejemplos: GPUs y unidades vectoriales SSE o AVX.
-![[Pasted image 20260821085935.png]]
+![](../Imagenes/Pasted%20image%2020260821085935.png)
 
 - Multiple Instruction Single Data: Múltiples flujos de instrucciones y un único flujo de datos.
 	- Modelo de arquitectura poco común. Aplica distintas operaciones sobre los mismos datos.
 	- Ejemplos asociados pero no reales: Sistemas redundantes tolerantes a fallos o Hacking de un mensaje codificado.
-![[Pasted image 20260821090012.png]]
+![](../Imagenes/Pasted%20image%2020260821090012.png)
 
 - Multiple Instruction Multiple Data: Múltiples flujos de instrucciones y múltiples flujos de datos.
 	- Arquitectura donde cada unidad de procesamiento puede ejecutar su propio programa y trabajar sobre datos distintos.
 	- Pueden ser de memoria compartida o distribuida.
 	- Ejemplos: Multiprocesadores, Multicores, Clusters, Grid.
-![[Pasted image 20260821090059.png|700]]
+![|700](../Imagenes/Pasted%20image%2020260821090059.png)
 ## Modelos de comunicación
 ### Multiprocesadores de memoria compartida
 - UMA (Uniform Memory Access).
 	- Cuando todos los procesadores acceden de forma uniforme a la memoria.
 	- El costo siempre es el mismo.
-	![[Pasted image 20260821091246.png|349]]
+	![|349](../Imagenes/Pasted%20image%2020260821091246.png)
 - NUMA (Non-Uniform Memory Access).
 	- Cuando cada procesador tiene acceso a determinados bancos de memoria.
 	- Al mejorar la localidad, mejora el rendimiento.
 	- Común en servidores.
 	- De todas formas, cada CPU puede acceder a cualquier banco de memoria.
-	![[Pasted image 20260821091319.png|349]]
+	![|349](../Imagenes/Pasted%20image%2020260821091319.png)
 	
-![[Pasted image 20260821091340.png]]
+![](../Imagenes/Pasted%20image%2020260821091340.png)
 En los dos modelos anteriores, la memoria es la misma.
 - Jerarquía de memoria
 	- Generalmente con dos o más niveles de caché (L1, L2, L3, L4).
 	- Según la arquitectura, los niveles 2, 3 y 4 suelen estar compartidos entre cores.
 	- Las GPUs poseen una jerarquía de memoria más compleja.
-		![[Pasted image 20260821091438.png|352]]
+		![|352](../Imagenes/Pasted%20image%2020260821091438.png)
 ### Multiprocesadores de memoria distribuida
 - Cada máquina tiene su propia memoria y se comunican mediante pasaje de mensajes.
 - Para simplificar se asumen varias PCs independientes con una CPU por PC.
-![[Pasted image 20260821091529.png]]
+![](../Imagenes/Pasted%20image%2020260821091529.png)
 ### Híbrido
 Es posible tener ambos modelos.
-![[Pasted image 20260821092613.png]]
+![](../Imagenes/Pasted%20image%2020260821092613.png)
 ### Granularidad
 En hardware, se refiere al número y la potencia de las unidades de procesamiento.
 #### Grano fino
@@ -86,9 +86,9 @@ Pocas unidades de procesamiento muy potentes.
 - Se trata de definir un gran número de pequeñas tareas (descomposición de grano fino), para brindar la mayor flexibilidad a los “potenciales” algoritmos paralelos.
 - Se ignoran cuestiones como el número de unidades de procesamiento y aspectos específico en la máquina de destino.
 - La atención se centra en reconocer oportunidades de ejecución paralela.
-![[Pasted image 20260821092826.png|557]]
+![|557](../Imagenes/Pasted%20image%2020260821092826.png)
 
-![[Pasted image 20260821092856.png|700]]
+![|700](../Imagenes/Pasted%20image%2020260821092856.png)
 
 - La descomposición de datos o de dominio, también conocida como paralelismo de datos, se caracteriza por la ejecución simultanea de la misma operación sobre diferentes elementos de datos.
 - Es más adecuado para arquitecturas de tipo SIMD.
@@ -111,7 +111,7 @@ Pocas unidades de procesamiento muy potentes.
 - Híbridos: la aplicación presenta distintas fases intensivas.
 #### Latencias
 Distintos eventos relacionados al cómputo requieren de un tiempo específico (Latencias).
-![[Pasted image 20260821093415.png]]
+![](../Imagenes/Pasted%20image%2020260821093415.png)
 ## Herramientas de software para paralelismo
 - Para memoria compartida:
 	- Pthreads.
@@ -124,7 +124,7 @@ Distintos eventos relacionados al cómputo requieren de un tiempo específico (L
 	- Otros (RMI, Sockets, RPC...).
 - Híbrido (ej. MPI + OpenMP + CUDA).
 ## Relación arquitectura - programación
-![[Pasted image 20260821094338.png]]
+![](../Imagenes/Pasted%20image%2020260821094338.png)
 
 # Resumen
 ## Extendido
