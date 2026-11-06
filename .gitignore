@@ -10,3 +10,5 @@
 cmake-build-*/
 .venv/
 *.o
+
+/Prácticas/TP final/informe/
