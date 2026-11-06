@@ -1,0 +1,23 @@
+# Frames generados por las simulaciones (cientos de MB)
+output_frames/
+
+# Binarios compilados
+Secuencial/main
+Paralelo/difusion_calor_cuda
+Paralelo/difusion_calor_cuda_streams
+Paralelo/difusion_calor
+*.o
+
+# Entornos virtuales de Python
+.venv/
+
+# Archivos auxiliares de LaTeX
+informe/*.aux
+informe/*.log
+informe/*.out
+informe/*.toc
+informe/*.synctex.gz
+
+# Sistema y editor
+.DS_Store
+.idea/

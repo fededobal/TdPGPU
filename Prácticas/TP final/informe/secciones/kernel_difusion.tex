@@ -1,0 +1,113 @@
+\section{Kernel de difusión (device)}
+Este es el kernel lanzado en cada paso del bucle principal. Se puede descomponer en seis pasos críticos.
+\subsection{Declaración del tile} 
+Antes de optimizar el algoritmo con el uso de memoria compartida, cada hilo debía leer 5 veces de memoria global por cada paso de la simulación:
+    \begin{itemize}
+        \item una vez para sí mismo;
+        \item cuatro veces, una por cada vecino (arriba, abajo, izquierda, derecha).
+    \end{itemize}
+    La memoria global es la más lenta de la jerarquía de memoria de la GPU. Para poder aprovechar entonces la memoria compartida, que es mucho más rápida por estar ubicada dentro del Streaming Multiprocessor, hago uso del tile.
+\begin{lstlisting}[firstnumber=106]
+extern __shared__ float tile[];
+\end{lstlisting}
+\begin{block}{Definición de tile}
+El tile es la porción de grilla que cada bloque trae a su memoria compartida. Este es visible para los hilos de ese bloque. 
+\end{block}
+    \begin{itemize}
+        \item Extern: indica que se declara sin tamaño, y el tamaño en bytes se pasa al kernel como tercer parámetro de la configuración de ejecución.
+        \item \_\_shared\_\_: la variable vive en memoria compartida.
+    \end{itemize}
+\begin{lstlisting}[firstnumber=194]
+size_t bytes_compartidos = (bloque.x + 2) * (bloque.y + 2) * sizeof(float);
+...
+for (int paso = 0; paso < pasos; paso++) {
+    ...(*@\setcounter{lstnumber}{201}@*)
+    difusion<<<grid, bloque, bytes_compartidos>>>(d_grilla, d_nueva, N, distancia);
+    ...(*@\setcounter{lstnumber}{216}@*)
+}
+\end{lstlisting}
+
+    Más adelante está la explicación sobre por qué se le suma 2 al ancho y al alto.
+
+\subsection{Identificación del hilo}
+Obtener el idx del hilo en la grilla.
+    \begin{itemize}
+        \item ancho y alto del bloque: blockDim.x y blockDim.y;
+        \item columna y fila del hilo dentro del bloque: threadIdx.x y threadIdx.y;
+        \item columna y fila del hilo en toda la grilla:
+        \begin{itemize}
+            \item columna: blockIdx.x $\times$ ancho\_bloque $+$ col\_bloque;
+            \item fila: blockIdx.y $\times$ alto\_bloque $+$ fila\_bloque;
+        \end{itemize}
+        \item identificador final del hilo: $fila * N + col$.
+    \end{itemize}
+
+\subsection{Implementación del halo}
+Los hilos del borde del bloque tienen vecinos que pertenecen a otros bloques y, por lo tanto, no están en el tile. Para que todos los hilos encuentren sus cuatro vecinos en memoria compartida, se agrega al tile una fila extra arriba y abajo, y una columna extra a cada lado, por lo que pasa a medir $(ancho + 2) \times (alto + 2)$. A estas celdas extra se las llama halo. No tienen hilos propios, sino que las cargan los hilos del borde del bloque. Así, el cálculo de todos los hilos lee únicamente de memoria compartida, sin casos especiales para el borde. Por esta razón, en el programa principal se le suma 2 al ancho y al alto al calcular la cantidad de bytes compartidos.
+
+\begin{lstlisting}[firstnumber=117]
+int ancho_tile = ancho_bloque + 2;
+int col_tile = col_bloque + 1;
+int fila_tile = fila_bloque + 1;
+\end{lstlisting}
+
+\subsection{Lectura coalescente}
+Habiendo organizado los hilos de tal forma que cada fila de bloque corresponde a un warp completo (32 hilos), y que el índice idx avanza consecutivamente por columnas, la lectura de memoria global de las celdas del bloque será coalescente.
+
+Cada hilo guarda en su posición del tile el valor de su posición en la grilla. Por cada fila de bloque (32 hilos consecutivos) habrá una sola transacción desde memoria global.
+\begin{lstlisting}[firstnumber=123]
+if (dentro_grilla) {(*@\quad\textcolor{gray}{$\leftarrow$}\,\tikz[baseline=(n.base)]\node[draw=gray, fill=gray!10, rounded corners, font=\scriptsize\ttfamily, inner sep=3pt] (n) {\textbf{col < N \&\& fila < N} $\rightarrow$ para descartar los hilos que sobran};@*)
+    tile[fila_tile * ancho_tile + col_tile] = d_grilla[idx];
+    ...
+\end{lstlisting}
+
+Luego, los hilos del borde del bloque cargan además las celdas del halo. Cada warp, que corresponde a una fila del bloque, carga sus propias celdas en una transacción, y las celdas laterales del halo en una transacción cada una, leídas por separado por los hilos 0 y 31. Así, los warps intermedios requieren tres transacciones.
+
+Además, el primer y el último warp cargan la fila de halo superior o inferior, que los 32 hilos leen de forma coalescente en una única transacción, por lo que estos dos warps requieren cuatro transacciones cada uno. Los vecinos de arriba y de abajo de los warps intermedios no se cargan por separado, ya que son celdas de los warps vecinos del mismo bloque.
+
+\begin{lstlisting}[firstnumber=125]
+    ...
+    if (fila_bloque == 0 && fila > 0)
+      tile[0 * ancho_tile + col_tile] = d_grilla[(fila - 1) * N + col];
+    if (fila_bloque == alto_bloque - 1 && fila < N - 1)
+      tile[(alto_bloque + 1) * ancho_tile + col_tile] = d_grilla[(fila + 1) * N + col];
+    if (col_bloque == 0 && col > 0)
+      tile[fila_tile * ancho_tile + 0] = d_grilla[fila * N + (col - 1)];
+    if (col_bloque == ancho_bloque - 1 && col < N - 1)
+      tile[fila_tile * ancho_tile + (ancho_bloque + 1)] = d_grilla[fila * N + (col + 1)];
+}
+\end{lstlisting}
+
+\subsection{Sincronización de hilos}
+Es imprescindible que ningún hilo avance al cálculo hasta que todos los hilos del bloque hayan terminado de cargar el tile. Cada hilo lee del tile los valores de sus vecinos, que fueron cargados por otros hilos, posiblemente de otros warps cuyo orden de ejecución se desconoce. Sin una barrera intermedia, un hilo podría leer una celda del tile antes de que fuera cargada. Además, esta directiva se pone fuera del if(dentro\_grilla) para que los hilos que sobran también puedan llegar a este punto y no bloquear a los hilos que sí sirven.
+
+\begin{lstlisting}[firstnumber=135]
+...
+__syncthreads();
+...
+\end{lstlisting}
+
+\subsection{Actualización de las temperaturas}
+Ahora, con la misma fórmula fila\_tile $\times$ ancho\_tile $+$ col\_tile, se procede a leer de memoria compartida el valor de su celda y de sus vecinos para sumarlos, aplicar la fórmula de difusión para el paso siguiente, y guardarlo en la grilla nueva.
+
+Nótese que solo se actualizarán aquellas celdas que no corresponden a fuentes de calor y, en caso contrario, la fuente se mantendrá en 100 grados. Para eso uso el valor entero (0 o 1) que devuelve la función es\_fuente. Luego se calculan los dos valores posibles y cada uno se multiplica por ese entero o por su negación.
+\[
+\text{d\_nueva[idx]} = \text{cálculo} \times \lnot\,\text{es\_fuente} + 100 \times \text{es\_fuente}
+\]
+De esta manera, todos los hilos ejecutarán lo mismo y se evitará la divergencia que supondría una ejecución condicional. Tampoco se actualizará el borde de la grilla, el cual se mantiene a 0 grados.
+
+\begin{lstlisting}[firstnumber=138]
+if (!frontera) {(*@\quad\textcolor{gray}{$\leftarrow$}\,\tikz[baseline=(n.base)]\node[draw=gray, fill=gray!10, rounded corners, font=\scriptsize\ttfamily, inner sep=3pt] (n) {\textbf{col == 0 || col >= N - 1 || fila == 0 || fila >= N - 1} $\rightarrow$ borde de la grilla};@*)
+    int int_es_fuente = es_fuente(col, fila, N, distancia);
+
+    float centro = tile[fila_tile * ancho_tile + col_tile];
+    float arriba = tile[(fila_tile - 1) * ancho_tile + col_tile];
+    float abajo = tile[(fila_tile + 1) * ancho_tile + col_tile];
+    float izq = tile[fila_tile * ancho_tile + (col_tile - 1)];
+    float der = tile[fila_tile * ancho_tile + (col_tile + 1)];
+
+    float suma_vecinos = arriba + abajo + izq + der;
+
+    d_nueva[idx] = (centro + DIFUSION * (suma_vecinos - 4 * centro)) * !int_es_fuente + TEMP_FUENTE * int_es_fuente;
+}
+\end{lstlisting}

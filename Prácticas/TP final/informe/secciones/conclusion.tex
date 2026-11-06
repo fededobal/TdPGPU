@@ -1,0 +1,15 @@
+\section{Conclusión}
+El presente trabajo me ha sido de gran utilidad para adentrarme en el mundo del cómputo de alto desempeño en GPUs, donde el paralelismo de grano fino es su principal característica.
+
+A partir de la ecuación discretizada de la Ley de Fourier, logré paralelizar la difusión de calor en CUDA, especialmente con el kernel "difusion", donde apliqué la ecuación de lleno junto con lo necesario para aprovechar el tile y la memoria compartida.
+
+Creo que el resultado principal es el cuello de botella que produce la escritura en disco, la cual ocupa arriba del 60\% del tiempo total de ejecución. Esto (ley de Amdahl) explica por qué el speedup termina siendo bajo o, incluso, menor a 1. 
+
+Los resultados que obtuve se podrían resumir en principalmente 3:
+\begin{itemize}
+    \item El kernel con tiles y lectura coalescente llega a unos 360 GB/s, cerca del 80\% del máximo teórico. O sea, supondría que del lado de la GPU ya no hay mucho más para ganar;
+    \item el tamaño de bloque influye poco, porque el kernel está limitado por la memoria (cerca del 80\% del ancho de banda teórico) y pesa menos del 3\% del tiempo total. Solo 1024 hilos por bloque resulta notablemente más lento;
+    \item con streams y memoria pinned la GPU queda oculta detrás de la escritura, así que el speedup llega prácticamente a la cota desde N = 2048 y la versión CUDA ya no pierde contra el secuencial en ningún tamaño. Para eso alcanzan dos streams, uno de cálculo y otro de copia; el vector de streams de la teoría no agrega mejora.
+\end{itemize}
+
+La principal limitación es la escritura de todos los frames a disco. Como la hace la CPU y no se puede acelerar con la GPU, el tiempo de la versión CUDA no puede bajar del tiempo de escritura, y eso acota el speedup a un máximo cercano a 2 con N = 4096. Pienso que se podría reducir este límite guardando un frame cada k pasos, ya que la escritura se dividiría por k; escribiendo varios frames en paralelo desde distintos hilos de la CPU; o usando un formato más compacto, para tener menos bytes que escribir. También vale la pena probar grillas más grandes, donde el cálculo pesa más frente a la escritura y la GPU tiene más margen para ganar. 

@@ -5,7 +5,7 @@ Este repositorio contiene apuntes, teorías y prácticas de la materia TdPGPU (T
 ## Contenido
 
 * **[Apuntes](Apuntes/)**: material teórico y explicaciones de la materia.
-    * **[Teorías](Apuntes/Teorías/)**: resumen de teorías de la materia.
+    * **[Teorías](Apuntes/Teorías/)**: algunos apuntes de la teoría.
         * [0- Presentación](Apuntes/Teorías/0-%20Presentación.md)
         * [1- Introducción a HPC y GPGPU](Apuntes/Teorías/1-%20Introducción%20a%20HPC%20y%20GPGPU.md)
         * [2- Arquitecturas GPU](Apuntes/Teorías/2-%20Arquitecturas%20GPU.md)
@@ -15,3 +15,4 @@ Este repositorio contiene apuntes, teorías y prácticas de la materia TdPGPU (T
         * [Reducción de vectores](Apuntes/Explicaciones%20prácticas/Reducción%20de%20vectores.md)
 * **[Prácticas](Prácticas/)**: prácticas y trabajos prácticos de la materia.
     * **[TP1 - CUDA Básico](Prácticas/TP1/)**: ejercicios del trabajo práctico 1 sobre CUDA básico.
+    * **[TP final - Difusión de calor](Prácticas/TP%20final/)**: simulación de difusión de calor en CUDA, con y sin streams, e informe.

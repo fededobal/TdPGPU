@@ -1,0 +1,32 @@
+\documentclass[12pt]{extarticle}
+\usepackage{estilo}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{tikzmark}
+\lstset{escapeinside={(*@}{@*)}}
+\usetikzlibrary{babel}
+\graphicspath{{img/}}
+
+% ---------- Datos ----------
+\title{Problema de Difusión de Calor}
+\subtitle{Taller de Programación sobre GPUs\\Prof. Adrián Pousa}
+\author{Federico Dobal}
+\newcommand{\materia}{Taller de Programación sobre GPUs}  % aparece en el footer
+
+\begin{document}
+
+\portada
+
+\tableofcontents
+\clearpage
+
+\input{secciones/introduccion}
+\input{secciones/programa_principal}
+\input{secciones/kernel_difusion}
+\input{secciones/resultados}
+\input{secciones/streams}
+\input{secciones/comparacion_ia}
+\input{secciones/visualizacion}
+\input{secciones/conclusion}
+
+\end{document}

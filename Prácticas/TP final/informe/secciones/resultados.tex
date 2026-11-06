@@ -1,0 +1,135 @@
+\section{Resultados}
+
+\subsection{Medición de tiempos}
+
+Utilicé Claude Opus 5.5 para crear dos scripts que realizan un barrido de parámetros en el cluster, uno para la versión secuencial y otro para la versión CUDA. Cada configuración se ejecutó 3 veces con 100 pasos en el nodo hexa1, y se informa el promedio. Los frames se escribieron en el disco local del nodo.
+
+Las dos versiones se miden de la misma forma, con dwalltime dentro del programa, desde la inicialización de la grilla hasta el final del bucle. Quedan afuera la creación del directorio de salida, las impresiones por pantalla y, en la versión CUDA, la reserva de memoria, donde se inicializa CUDA. Al código secuencial solo le agregué la medición.
+
+Además del tiempo total, en el secuencial mido el cálculo y la escritura de los frames, y en la versión CUDA los kernels (con eventos), las copias D2H y la escritura. El speedup lo calculo sobre el tiempo total, porque la escritura de los frames es parte del problema y la hacen las dos versiones. Con el criterio de la teoría, que toma solo el kernel y las transferencias (tabla \ref{tab:descomposicion}), el speedup sería 0.92, 0.96, 1.34 y 2.51.
+
+\subsection{Tiempos obtenidos}
+
+\subsubsection*{Versión secuencial}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{rrrrrrr}
+    \toprule
+    N & Rep. 1 (s) & Rep. 2 (s) & Rep. 3 (s) & Promedio (s) & Cálculo (ms/paso) & Disco (s) \\
+    \midrule
+    512  & 0.0201 & 0.0209 & 0.0208 & 0.0206 & 0.0784 & 0.0126 \\
+    1024 & 0.0746 & 0.0652 & 0.0628 & 0.0675 & 0.2470 & 0.0424 \\
+    2048 & 0.3186 & 0.3194 & 0.3163 & 0.3181 & 1.2499 & 0.1908 \\
+    4096 & 2.0424 & 1.7743 & 1.7813 & 1.8660 & 9.1706 & 0.9404 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Tiempos de la versión secuencial (100 pasos). El cálculo y el disco son el promedio de las 3 repeticiones.}
+  \label{tab:secuencial}
+\end{table}
+
+\subsubsection*{Versión CUDA}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{rrrrrrr}
+    \toprule
+    N & Hilos/bloque & Total (s) & Kernel (ms/paso) & D2H (s) & Disco (s) & Ancho de banda (GB/s) \\
+    \midrule
+    512  & 64   & 0.0272 & 0.0077 & 0.0082 & 0.0173 & 273.1 \\
+         & 128  & 0.0260 & 0.0072 & 0.0081 & 0.0161 & 293.1 \\
+         & 256  & 0.0261 & 0.0068 & 0.0079 & 0.0163 & 310.1 \\
+         & 512  & 0.0257 & 0.0083 & 0.0080 & 0.0162 & 253.4 \\
+         & 1024 & 0.0262 & 0.0101 & 0.0080 & 0.0163 & 208.9 \\
+    \midrule
+    1024 & 64   & 0.0905 & 0.0202 & 0.0236 & 0.0630 & 415.7 \\
+         & 128  & 0.0918 & 0.0189 & 0.0237 & 0.0644 & 445.1 \\
+         & 256  & 0.0872 & 0.0198 & 0.0234 & 0.0601 & 423.9 \\
+         & 512  & 0.0918 & 0.0208 & 0.0236 & 0.0644 & 403.2 \\
+         & 1024 & 0.0926 & 0.0293 & 0.0237 & 0.0642 & 286.8 \\
+    \midrule
+    2048 & 64   & 0.3289 & 0.0944 & 0.0842 & 0.2312 & 355.5 \\
+         & 128  & 0.3389 & 0.0938 & 0.0841 & 0.2412 & 357.7 \\
+         & 256  & 0.3404 & 0.0973 & 0.0843 & 0.2424 & 345.1 \\
+         & 512  & 0.3419 & 0.1021 & 0.0841 & 0.2435 & 328.8 \\
+         & 1024 & 0.3590 & 0.1644 & 0.0840 & 0.2543 & 204.0 \\
+    \midrule
+    4096 & 64   & 1.2982 & 0.3672 & 0.3282 & 0.9200 & 365.5 \\
+         & 128  & 1.3377 & 0.3721 & 0.3291 & 0.9582 & 360.8 \\
+         & 256  & 1.3930 & 0.3846 & 0.3292 & 1.0123 & 349.0 \\
+         & 512  & 1.3025 & 0.4043 & 0.3295 & 0.9191 & 332.0 \\
+         & 1024 & 1.3638 & 0.6462 & 0.3286 & 0.9572 & 207.7 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Tiempos de la versión CUDA (100 pasos, promedio de 3 repeticiones).}
+  \label{tab:paralelo}
+\end{table}
+
+\subsubsection*{Speedup}
+
+Para cada N tomo la configuración de hilos por bloque con menor tiempo de kernel.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{rrrrr}
+    \toprule
+    N & Hilos/bloque & Secuencial (s) & CUDA (s) & Speedup \\
+    \midrule
+    512  & 256 & 0.0206 & 0.0261 & 0.79 \\
+    1024 & 128 & 0.0675 & 0.0918 & 0.74 \\
+    2048 & 128 & 0.3181 & 0.3389 & 0.94 \\
+    4096 & 64  & 1.8660 & 1.2982 & 1.44 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Speedup del tiempo total (100 pasos, promedio de 3 repeticiones).}
+  \label{tab:speedup}
+\end{table}
+
+\subsection{Análisis de rendimiento}
+
+\subsubsection*{Dónde se va el tiempo}
+
+Ninguna de las dos versiones está dominada por el cálculo.\footnote{Para este análisis usé IA para identificar patrones, comportamientos y aspectos ocultos en los resultados, uso permitido por las pautas de uso de IA de la materia.} En el secuencial la escritura de los frames ocupa entre el 50 y el 63\% del tiempo. En la versión CUDA los kernels ocupan menos del 3\%, las copias D2H alrededor del 25 al 30\% y la escritura entre el 62 y el 71\%, y todo ocurre en serie. Por eso la configuración del kernel casi no influye en el total. Con N = 4096, pasar de la peor configuración de hilos a la mejor ahorra unos 28 ms de kernel, apenas el 2\% del tiempo total.
+
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{rrrrr}
+    \toprule
+    N & Cálculo sec. (s) & Kernels + D2H (s) & Escritura sec. (s) & Escritura CUDA (s) \\
+    \midrule
+    512  & 0.0079 & 0.0086 & 0.0126 & 0.0163 \\
+    1024 & 0.0247 & 0.0256 & 0.0424 & 0.0644 \\
+    2048 & 0.1250 & 0.0935 & 0.1908 & 0.2412 \\
+    4096 & 0.9171 & 0.3650 & 0.9404 & 0.9200 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Tiempo de cálculo y de escritura de cada versión (100 pasos, promedio de 3 repeticiones).}
+  \label{tab:descomposicion}
+\end{table}
+
+\subsubsection*{Comportamiento del speedup}
+
+En el cálculo, hasta N = 1024 la copia de la grilla desde la GPU ya cuesta lo mismo que calcularla en la CPU. Recién desde N = 2048 la GPU ahorra tiempo, y con N = 4096 ahorra 0.55 s, porque el costo por celda del secuencial pasa de unos 0.3 ns a 0.55 ns, probablemente porque las grillas (128 MB) dejan de entrar en la caché. A esto se suma que el secuencial copia new\_grid a grid en cada paso, mientras que la versión CUDA solo intercambia punteros.
+
+En la escritura, la versión CUDA es entre un 26 y un 52\% más lenta hasta N = 2048, posiblemente porque en el secuencial la grilla recién calculada todavía está en caché. Con N = 4096 las dos tardan lo mismo.
+
+Hasta N = 2048 lo que se pierde en la escritura supera lo que se gana en el cálculo. Con N = 4096 la escritura se iguala y el speedup llega a 1.44.
+
+\subsubsection*{Efecto de los hilos por bloque}
+
+Entre 64 y 256 hilos por bloque el tiempo del kernel varía menos del 5\% desde N = 2048. Con 1024 hilos es entre 1.49 y 1.76 veces más lento, porque un SM admite como máximo 1536 hilos y entra un solo bloque, con una ocupación del 67\%.
+
+Calculo el ancho de banda efectivo con la fórmula de la teoría, $BW = (RB + WB) / (t \cdot 10^9)$: en cada paso el kernel lee y escribe una grilla ($RB = WB = 4N^2$ bytes) y $t$ es su tiempo. El máximo teórico de la placa es de 448 GB/s ($28\,\text{Gbps} \times 128\,\text{bits} / 8$). Con N $\leq$ 1024 el valor medido se acerca a ese máximo, probablemente porque las dos grillas entran en la caché L2. Con grillas más grandes el kernel lee de la memoria de la placa y queda en unos 360 GB/s, cerca del 80\% del máximo, así que está limitado por la memoria.
+
+\subsubsection*{Aspectos ocultos}
+
+\begin{itemize}
+  \item La columna de disco no mide el disco. Se escribe a más de 6 GB/s porque los frames solo se copian a la caché de páginas del sistema operativo.
+  \item La escritura de la versión CUDA tiene dos niveles (con N = 4096, 0.87 s o 1.01 s) que no dependen de los hilos por bloque. Por eso la mejor configuración la elegí según el tiempo de kernel y no según el total.
+  \item Las copias D2H alcanzan solo entre 13 y 20 GB/s, porque la memoria del host es paginable y el driver hace una copia intermedia.
+\end{itemize}
+
+\subsubsection*{Límite impuesto por la escritura}
+
+Aunque el cálculo y las copias de la versión CUDA fueran instantáneos, su tiempo no podría bajar del tiempo de escritura. Por la ley de Amdahl, esto limita el speedup a 1.26, 1.05, 1.32 y 2.03 para cada tamaño.

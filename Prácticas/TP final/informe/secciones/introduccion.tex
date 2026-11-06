@@ -1,0 +1,26 @@
+\section{Introducción}
+La conducción de calor sucede desde un cuerpo con mayor temperatura hacia otro con menor temperatura. Este fenómeno está dado por la Ley de Fourier, donde la tasa de cambio de temperatura en un punto depende de la diferencia con sus vecinos. 
+\begin{equation}
+\frac{\partial T}{\partial t} = D \, \nabla^2 T
+\label{eq:calor}
+\end{equation}
+
+\noindent Donde:
+\begin{tabular}{@{}r@{\;:\;}l}
+$T$          & temperatura \\
+$D$          & coeficiente de difusión térmica \\
+$t$          & tiempo \\
+$\nabla^2 T$ & laplaciano de la temperatura (suma de segundas derivadas espaciales)
+\end{tabular}
+
+
+\begin{block}{Objetivo}
+Simular en GPU la difusión de calor sobre una superficie (Ley de Fourier). La superficie se representa con una grilla de N $\times$ N celdas, donde cada celda guarda la temperatura $T(x,y)$ de un punto, y en cada paso se actualiza según:
+\begin{equation}
+\begin{gathered}
+T^{(t+1)}(x,y) = T^{(t)}(x,y) \\
++ D \bigl[ T(x+1,y) + T(x-1,y) + T(x,y+1) + T(x,y-1) - 4\,T(x,y) \bigr]
+\end{gathered}
+\label{eq:discreta}
+\end{equation}
+\end{block}
