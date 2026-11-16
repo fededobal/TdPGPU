@@ -11,4 +11,25 @@ cmake-build-*/
 .venv/
 *.o
 
-/Prácticas/TP final/informe/
+/TP final/informe/
+
+# Scripts que lanzan CUDA en Kaggle o en los clusters (lidi, hexa)
+/Prácticas/kaggle-cuda.sh
+/Prácticas/lidi-cuda.sh
+/TP final/Paralelo/hexa-cuda.sh
+/TP final/Paralelo/hexa-capabilities.sh
+
+# Archivos traídos de TdPGPU_fuera_del_repo (se guardan en local, no se versionan)
+/Prácticas/TP1/brick_sort
+/TP final/TP final - DOBAL/
+/TP final/TP final - DOBAL.zip
+/TP final/docs/
+/TP final/revision_informe.md
+/TP final/Paralelo/desarrollo/difusion_calor_ia.cu
+/TP final/Paralelo/desarrollo/difusion_calor_opus.cu
+/TP final/Paralelo/desarrollo/difusion_calor_sonnet.cu
+/TP final/Paralelo/desarrollo/explicacion/
+/TP final/Paralelo/streams/
+/TP final/resultados/paralelo_difusion_calor_claude_20261104_211008.csv
+/TP final/resultados/paralelo_difusion_calor_gemini_20261104_211055.csv
+/TP final/scripts/comparar_ia.sh
