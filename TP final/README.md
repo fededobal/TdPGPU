@@ -6,22 +6,23 @@ Simulación de la difusión de calor (ley de Fourier) en una grilla de N×N, par
 
 ```
 TP final/
+├── Enunciado.pdf              Consigna del TP
+├── Ejemplo-de-aplicaciones---Difusion-de-calor.pdf   Explicación del problema (de la cátedra)
+├── Informe.pdf                Informe entregado
 ├── Secuencial/                Algoritmo secuencial de la cátedra (con medición de tiempos)
 ├── Paralelo/
 │   ├── difusion_calor_cuda.cu           Versión CUDA (memoria compartida + coalescencia)
 │   ├── difusion_calor_cuda_streams.cu   Versión con un vector de streams
 │   ├── desarrollo/
 │   │   └── difusion_calor_cuda_dos_streams.cu   Versión anterior, con dos streams
-│   ├── hexa-cuda.sh           Compila y ejecuta un .cu en el cluster hexa
+│   ├── c.cu                   Muestra las capacidades de la GPU
 │   └── show_blue2red.py       Visualización de los frames (de la cátedra)
 ├── scripts/
 │   ├── barrido_secuencial.sh  Barrido de parámetros de la versión secuencial
 │   ├── barrido_paralelo.sh    Barrido de parámetros de la versión CUDA
 │   ├── verificar_streams.sh   Verifica que los frames de la versión con streams sean idénticos
 │   └── comparar_frames.py     Compara los frames de dos simulaciones
-├── resultados/                CSV de los barridos
-├── informe/                   Informe en LaTeX y PDF
-└── docs/tp/                   Enunciado y material del problema
+└── resultados/                CSV de los barridos
 ```
 
 Cada programa escribe sus frames en `output_frames/`, dentro de la carpeta desde donde se ejecuta.
@@ -42,12 +43,6 @@ Paralelo:
 cd Paralelo
 nvcc -O3 -arch=sm_120 -o difusion_calor_cuda difusion_calor_cuda.cu
 ./difusion_calor_cuda 512 100 256      # <N> <pasos> <hilos por bloque>
-```
-
-En el cluster (desde `TP final`):
-
-```sh
-Paralelo/hexa-cuda.sh Paralelo/difusion_calor_cuda_streams.cu 1024 100 256
 ```
 
 ## Visualizar y verificar
