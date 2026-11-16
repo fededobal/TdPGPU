@@ -30,6 +30,17 @@ Diapositivas de la cátedra y, cuando los hay, mis apuntes de cada clase.
 
 Ejercicios introductorios de CUDA. Consigna: [Practica-1---CUDA-basico.pdf](Prácticas/TP1/Practica-1---CUDA-basico.pdf).
 
+| Archivo | Qué hace |
+|---|---|
+| [punto1a.cu](Prácticas/TP1/punto1a.cu) y [punto1b.cu](Prácticas/TP1/punto1b.cu) | Multiplica un vector por una constante; en 1b, C y N van en memoria de constantes |
+| [punto2.cu](Prácticas/TP1/punto2.cu) | Suma de vectores |
+| [punto3.cu](Prácticas/TP1/punto3.cu) | Suma de matrices N×N |
+| [punto4.cu](Prácticas/TP1/punto4.cu) | Multiplicación de matrices N×N |
+| [punto5.cu](Prácticas/TP1/punto5.cu) | Máximo y mínimo de un vector |
+| [punto6.cu](Prácticas/TP1/punto6.cu) | Sumatoria de los desvíos al cuadrado respecto del promedio |
+| [punto7.cu](Prácticas/TP1/punto7.cu) | Cantidad de ocurrencias de un valor, con una reducción en GPU |
+| [punto8.cu](Prácticas/TP1/punto8.cu) | Ordenamiento par-impar (brick sort) en GPU; [brick_sort.c](Prácticas/TP1/brick_sort.c) es la versión secuencial |
+
 ## [TP final – Difusión de calor](TP%20final/)
 
 Simulación de la difusión de calor en una grilla N×N, paralelizada con CUDA y comparada contra la versión secuencial de la cátedra.
